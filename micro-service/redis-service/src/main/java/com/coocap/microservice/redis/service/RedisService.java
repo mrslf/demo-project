@@ -298,7 +298,7 @@ public class RedisService {
 
 
     //---------------------------------------------------------------------
-    // string 操作
+    // hash 操作
     //---------------------------------------------------------------------
 
     /**
@@ -444,13 +444,168 @@ public class RedisService {
     }
 
 
+    //---------------------------------------------------------------------
+    // list 操作
+    //---------------------------------------------------------------------
 
+    /**
+     * 阻塞式弹出列表头元素
+     * @param key
+     * @param timeout
+     * @param timeUnit
+     * @return
+     */
+    public Object blpop(String key, long timeout, TimeUnit timeUnit){
+        return listOperations.leftPop(key, timeout, timeUnit);
+    }
 
+    /**
+     * 阻塞式弹出列表尾元素
+     * @param key
+     * @param timeout
+     * @param timeUnit
+     * @return
+     */
+    public Object brpop(String key, long timeout, TimeUnit timeUnit){
+        return listOperations.rightPop(key, timeout, timeUnit);
+    }
 
+    /**
+     * 阻塞式
+     * 将列表 source 中的最后一个元素(尾元素)弹出，并返回给客户端。
+     * 将 source 弹出的元素插入到列表 destination ，作为 destination 列表的的头元素。
+     * @param source
+     * @param destination
+     * @param timeout
+     * @param timeUnit
+     * @return
+     */
+    public Object brpopLpush(String source, String destination, long timeout, TimeUnit timeUnit){
+        return listOperations.rightPopAndLeftPush(source, destination, timeout, timeUnit);
+    }
 
+    /**
+     * 获取列表 key 中，下标为 index 的元素。
+     * @param key
+     * @param index
+     * @return
+     */
+    public Object lindex(String key, long index){
+        return listOperations.index(key, index);
+    }
 
+    /**
+     * 获取列表 key 的长度。
+     * @param key
+     * @return
+     */
+    public long llen(String key){
+        return listOperations.size(key);
+    }
 
+    /**
+     * 移除并返回列表 key 的头元素。
+     * @param key
+     * @return
+     */
+    public Object lpop(String key){
+        return listOperations.leftPop(key);
+    }
 
+    /**
+     * 将一个或多个值 value 插入到列表 key 的表头
+     * @param key
+     * @return
+     */
+    public long lpush(String key, List<Object> list){
+        return listOperations.leftPushAll(key, list);
+    }
+
+    /**
+     * 将值 value 插入到列表 key 的表头，当且仅当 key 存在并且是一个列表。
+     * @param key
+     * @return
+     */
+    public long lpushx(String key, Object value){
+        return listOperations.leftPushIfPresent(key, value);
+    }
+
+    /**
+     * 返回列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 指定。
+     * @param key
+     * @return
+     */
+    public List<Object> lrange(String key, long start, long stop){
+        return listOperations.range(key, start, stop);
+    }
+
+    /**
+     * 根据参数 count 的值，移除列表中与参数 value 相等的元素。
+     * @param key
+     * @return 被移除元素的数量。
+     */
+    public long lrem(String key, long count, Object value){
+        return listOperations.remove(key, count, value);
+    }
+
+    /**
+     * 将列表 key 下标为 index 的元素的值设置为 value 。
+     * @param key
+     * @param index
+     * @param value
+     */
+    public void lset(String key, long index, Object value){
+        listOperations.set(key, index, value);
+    }
+
+    /**
+     * 对一个列表进行修剪(trim)，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。
+     * @param key
+     * @param start
+     * @param stop
+     */
+    public void ltrim(String key, long start, long stop){
+        listOperations.trim(key, start, stop);
+    }
+
+    /**
+     * 移除并返回列表 key 的尾元素。
+     * @param key
+     * @return
+     */
+    public Object rpop(String key){
+        return listOperations.rightPop(key);
+    }
+
+    /**
+     * 非阻塞式
+     * 将列表 source 中的最后一个元素(尾元素)弹出，并返回给客户端。
+     * 将 source 弹出的元素插入到列表 destination ，作为 destination 列表的的头元素。
+     * @param source
+     * @param destination
+     * @return
+     */
+    public Object rpopLpush(String source, String destination){
+        return listOperations.rightPopAndLeftPush(source, destination);
+    }
+
+    /**
+     * 将一个或多个值 value 插入到列表 key 的表尾(最右边)。
+     * @param key
+     * @return
+     */
+    public long rpush(String key, List<Object> list){
+        return listOperations.rightPushAll(key, list);
+    }
+
+    /**
+     * 将值 value 插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表。
+     * @param key
+     * @return
+     */
+    public long rpushx(String key, Object value){
+        return listOperations.rightPushIfPresent(key, value);
+    }
 
 
 
